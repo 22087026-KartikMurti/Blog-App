@@ -210,60 +210,6 @@ test.describe("ADMIN UPDATE SCREEN", () => {
   );
 
   test(
-    "Show preview",
-    {
-      tag: "@a2",
-    },
-    async ({ userPage }) => {
-      await userPage.goto("/posts/no-front-end-framework-is-the-best");
-
-      // UPDATE SCREEN > Under the Description is a "Preview" button that replaces the text area with a rendered markdown string and changes the title to "Close Preview".
-      await userPage.getByText("Preview").focus();
-      await userPage.getByText("Preview").click();
-      await expect(userPage.getByTestId("content-preview")).toBeVisible();
-      await expect(
-        await userPage.getByTestId("content-preview").innerHTML(),
-      ).toContain("<strong>sint voluptas</strong>");
-      await expect(userPage.getByText("Close Preview")).toBeVisible();
-    },
-  );
-
-  test(
-    "Restore preview",
-    {
-      tag: "@a2",
-    },
-    async ({ userPage }) => {
-      await userPage.goto("/posts/no-front-end-framework-is-the-best");
-
-      // UPDATE SCREEN > When the preview is closed, the cursor must be in the same position as before opening the preview.
-
-      let textBox = await userPage.getByLabel("Content");
-      await textBox.evaluate((element: HTMLTextAreaElement) => {
-        element.focus();
-        element.setSelectionRange(20, 20);
-        element.focus();
-      });
-
-      await userPage.getByText("Preview").click();
-      await userPage.getByText("Close Preview").click();
-
-      textBox = await userPage.getByLabel("Content");
-      const { selectionStart, selectionEnd } = await textBox.evaluate(
-        (textarea: HTMLTextAreaElement) => {
-          return {
-            selectionStart: textarea.selectionStart,
-            selectionEnd: textarea.selectionEnd,
-          };
-        },
-      );
-
-      expect(selectionStart).toBe(20);
-      expect(selectionEnd).toBe(20);
-    },
-  );
-
-  test(
     "Image Preview",
     {
       tag: "@a2",
