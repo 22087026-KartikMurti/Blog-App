@@ -1,10 +1,30 @@
 import { client } from "@repo/db/client";
 import { NextResponse, NextRequest } from "next/server";
 import { toUrlPath } from "@repo/utils/url";
+import { isLoggedIn } from "../../../utils/auth";
+
+async function checkAuth(request: NextRequest) {
+    const isAuthenticated = await isLoggedIn();
+    if (!isAuthenticated) {
+        return NextResponse.json(
+            { message: "Unauthorized" },
+            { status: 401 }
+        );
+    } else {
+        return true;
+    }
+}
 
 //Creates a new post in the database
 export async function POST(request: NextRequest) {
     try {
+        const auth = await checkAuth(request);
+        if(auth !== true) {
+            return auth;
+        } else {
+            console.log("User is authenticated");
+        }
+
         const data = await request.json();
         const posts = await client.db.post.findMany();
 
