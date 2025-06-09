@@ -5,6 +5,7 @@ import { Button } from "@repo/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import QuillEditor from "./RichTextEditor";
+import TurndownService from "turndown";
 
 interface PostFormData {
     id: number;
@@ -29,7 +30,7 @@ interface PostFormProps {
 
 export function PostForm({ initialData }: PostFormProps) {
     const router = useRouter();
-    const [showPreview, setShowPreview] = useState(false);
+    const turndownService = new TurndownService();
     const [isSaving, setIsSaving] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
 
@@ -119,19 +120,22 @@ export function PostForm({ initialData }: PostFormProps) {
 
             const method = initialData?.title ? "PUT" : "POST";
 
+            // Convert HTML content from the editor to Markdown for storage
+            const contentMarkdown = turndownService.turndown(formData.content);
+            const updatedFormData = {
+                ...formData,
+                content: contentMarkdown
+            };
+
             const response = await fetch(endpoint, {
                 method: method,
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(updatedFormData),
             });
             if (response.ok) {
                 setSuccessMessage("Post updated successfully!");
-                setTimeout(() => {
-                    router.push("/");
-                }
-                , 2000);
             } else {
                 throw new Error("Failed to save post");
             }

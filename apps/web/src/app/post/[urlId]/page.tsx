@@ -65,7 +65,6 @@ export default async function Page({
               />
             </div>
             <div>
-              {/* Needs to match up with the new Quill text editor */}
               <div data-test-id="content-markdown" dangerouslySetInnerHTML={{
                 __html: sanitizeHtml(marked(updatedPost.content) as string, {
                   allowedTags: [

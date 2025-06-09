@@ -1,6 +1,7 @@
 "use client";
 
 import { forwardRef, useState, useEffect, useRef } from 'react';
+import { marked } from 'marked';
 
 interface QuillEditorProps {
   value: string;
@@ -74,7 +75,8 @@ const QuillEditor = forwardRef<any, QuillEditorProps>(
 
           // Set initial content
           if (value) {
-            quill.clipboard.dangerouslyPasteHTML(value);
+            const htmlValue = await marked(value);
+            quill.clipboard.dangerouslyPasteHTML(htmlValue);
           }
 
           // Store editor reference
