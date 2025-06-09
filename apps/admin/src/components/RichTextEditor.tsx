@@ -39,6 +39,11 @@ const QuillEditor = forwardRef<any, QuillEditorProps>(
               document.head.appendChild(link);
             }
           }
+
+          if(containerRef.current) {
+            // Clear any existing content in the container
+            containerRef.current.innerHTML = '';
+          }
           
           // Create editor container
           const editorContainer = document.createElement('div');

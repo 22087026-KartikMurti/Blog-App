@@ -136,6 +136,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       await userPage.getByLabel("Title").fill("New title");
       await userPage.getByLabel("Description").fill("New Description");
+      await userPage.waitForTimeout(1000); // wait for the editor to load
       await userPage.locator('.ql-editor').click();
       await userPage.keyboard.press('Control+A');
       await userPage.keyboard.type("New Content");
@@ -177,7 +178,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       // await userPage.getByLabel("Category").fill("React"); 
       // Default category is Node
       await userPage.getByLabel("Description").fill("New Description");
-      // await userPage.getByLabel("Content").fill("New Content");
+      await userPage.waitForTimeout(1000); // wait for the editor to load
       await userPage.locator('.ql-editor').click();
       await userPage.keyboard.press('Control+A');
       await userPage.keyboard.type("New Content");
