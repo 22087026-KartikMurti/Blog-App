@@ -74,8 +74,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       // UPDATE SCREEN > Content
 
-      // await userPage.getByLabel("Content").click();
-      // await userPage.getByLabel("Content").clear();
+      await userPage.waitForTimeout(1000); // wait for the editor to load
       await userPage.locator('.ql-editor').click();
       await userPage.keyboard.press('Control+A');
       await userPage.keyboard.press("Backspace");
