@@ -74,12 +74,16 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       // UPDATE SCREEN > Content
 
-      await userPage.getByLabel("Content").click();
-      await userPage.getByLabel("Content").clear();
+      // await userPage.getByLabel("Content").click();
+      // await userPage.getByLabel("Content").clear();
+      await userPage.locator('.ql-editor').click();
+      await userPage.keyboard.press('Control+A');
+      await userPage.keyboard.press("Backspace");
       await saveButton.click();
 
       await expect(userPage.getByText("Content is required")).toBeVisible();
-      await userPage.getByLabel("Content").fill("New Description");
+      await userPage.locator('.ql-editor').click();
+      await userPage.keyboard.type("New Content");
       await saveButton.click();
       await expect(userPage.getByText("Content is required")).not.toBeVisible();
 
@@ -133,7 +137,9 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       await userPage.getByLabel("Title").fill("New title");
       await userPage.getByLabel("Description").fill("New Description");
-      await userPage.getByLabel("Content").fill("New Content");
+      await userPage.locator('.ql-editor').click();
+      await userPage.keyboard.press('Control+A');
+      await userPage.keyboard.type("New Content");
       await userPage
         .getByLabel("Image URL")
         .fill("http://example.com/image.jpg");
@@ -172,7 +178,10 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       // await userPage.getByLabel("Category").fill("React"); 
       // Default category is Node
       await userPage.getByLabel("Description").fill("New Description");
-      await userPage.getByLabel("Content").fill("New Content");
+      // await userPage.getByLabel("Content").fill("New Content");
+      await userPage.locator('.ql-editor').click();
+      await userPage.keyboard.press('Control+A');
+      await userPage.keyboard.type("New Content");
       await userPage
         .getByLabel("Image URL")
         .fill("http://example.com/image.jpg");
