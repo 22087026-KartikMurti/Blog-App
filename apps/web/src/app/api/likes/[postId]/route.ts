@@ -16,6 +16,14 @@ export async function GET(
         return NextResponse.json({ error: "IP address not found" }, { status: 400 });
       }
 
+      //Check if the request is coming from the intended origin
+      const origin = headersList.get('origin');
+      const host = headersList.get('host');
+      const isValidOrigin = !origin || origin === `http://${host}`;
+      if(!isValidOrigin) {
+        return NextResponse.json({ error: "Invalid request origin" }, { status: 403 });
+      }
+
       const postId = parseInt(params.postId);
       
       if (isNaN(postId)) {
@@ -126,6 +134,14 @@ export async function DELETE(
 
     if (!ip) {
       return NextResponse.json({ error: "IP address not found" }, { status: 400 });
+    }
+
+    //Check if the request is coming from the intended origin
+    const origin = headersList.get('origin');
+    const host = headersList.get('host');
+    const isValidOrigin = !origin || origin === `http://${host}`;
+    if(!isValidOrigin) {
+      return NextResponse.json({ error: "Invalid request origin" }, { status: 403 });
     }
 
     const postId = parseInt(params.postId);
