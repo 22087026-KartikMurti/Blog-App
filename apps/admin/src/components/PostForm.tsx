@@ -10,6 +10,7 @@ import TurndownService from "turndown";
 interface PostFormData {
     id: number;
     title: string;
+    category: string;
     description: string;
     content: string;
     imageUrl: string;
@@ -19,6 +20,7 @@ interface PostFormData {
 interface FormErrors {
     title?: string;
     description?: string;
+    category?: string;
     content?: string;
     imageUrl?: string;
     tags?: string;
@@ -29,7 +31,6 @@ interface PostFormProps {
 }
 
 export function PostForm({ initialData }: PostFormProps) {
-    const router = useRouter();
     const turndownService = new TurndownService();
     const [isSaving, setIsSaving] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
@@ -42,6 +43,7 @@ export function PostForm({ initialData }: PostFormProps) {
     const [formData, setFormData] = useState<PostFormData>(initialData || {
         id: -1, // default value before the post is created
         title: "",
+        category: "",
         description: "",
         content: "",
         imageUrl: "",
@@ -53,6 +55,10 @@ export function PostForm({ initialData }: PostFormProps) {
 
         if (!formData.title) {
             errors.title = "Title is required";
+        }
+
+        if(!formData.category) {
+            errors.category = "Category is required";
         }
 
         if (!formData.description) {
@@ -176,6 +182,22 @@ export function PostForm({ initialData }: PostFormProps) {
                     />
                     {formErrors.title && 
                     <p className="text-red-500 text-sm mt-1">{formErrors.title}</p>}
+                </div>
+
+                <div>
+                    <label htmlFor="category" className="block mb-2">
+                        Category
+                    </label>
+                    <input
+                        type="text"
+                        id="category"
+                        name="category"
+                        value={formData.category}
+                        onChange={handleInputChange}
+                        className="w-full border rounded p-2"
+                    />
+                    {formErrors.category && 
+                    <p className="text-red-500 text-sm mt-1">{formErrors.category}</p>}
                 </div>
 
                 <div>

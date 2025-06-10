@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { toUrlPath } from "@repo/utils/url";
 import { isLoggedIn } from "../../../../utils/auth";
 
-async function checkAuth(request: NextRequest) {
+async function checkAuth() {
   const isAuthenticated = await isLoggedIn();
   if (!isAuthenticated) {
     return NextResponse.json(
@@ -20,7 +20,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ postId: string }> }
 ) {
-  const auth = await checkAuth(request);
+  const auth = await checkAuth();
   if(auth !== true) {
     return auth;
   } else {
@@ -73,7 +73,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ postId: string }> }
 ) {
-  const auth = await checkAuth(request);
+  const auth = await checkAuth();
   if(auth !== true) {
     return auth;
   } else {
@@ -97,6 +97,7 @@ export async function PUT(
       where: { id: pId },
       data: { 
         title: data.title,
+        category: data.category,
         content: data.content, 
         tags: data.tags,
         description: data.description,

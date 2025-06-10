@@ -43,6 +43,16 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       await saveButton.click();
       await expect(userPage.getByText("Title is required")).not.toBeVisible();
 
+      // UPDATE SCREEN > Category
+
+      await userPage.getByLabel("Category").clear();
+      await saveButton.click();
+      await expect(userPage.getByText("Category is required")).toBeVisible();
+
+      await userPage.getByLabel("Category").fill("React");
+      await saveButton.click();
+      await expect(userPage.getByText("Category is required")).not.toBeVisible();
+
       // UPDATE SCREEN > Description
 
       await userPage.getByLabel("Description").clear();
@@ -136,6 +146,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       await userPage.getByLabel("Title").fill("New title");
       await userPage.getByLabel("Description").fill("New Description");
+      await userPage.getByLabel("Category").fill("React"); 
       await userPage.waitForTimeout(1000); // wait for the editor to load
       await userPage.locator('.ql-editor').click();
       await userPage.keyboard.press('Control+A');
@@ -175,8 +186,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       // BACKEND / ADMIN / UPDATE SCREEN > Logged in user can create a new post to the database, if the form is validated
 
       await userPage.getByLabel("Title").fill("New title");
-      // await userPage.getByLabel("Category").fill("React"); 
-      // Default category is Node
+      await userPage.getByLabel("Category").fill("React"); 
       await userPage.getByLabel("Description").fill("New Description");
       await userPage.waitForTimeout(1000); // wait for the editor to load
       await userPage.locator('.ql-editor').click();

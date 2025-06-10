@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { toUrlPath } from "@repo/utils/url";
 import { isLoggedIn } from "../../../utils/auth";
 
-async function checkAuth(request: NextRequest) {
+async function checkAuth() {
     const isAuthenticated = await isLoggedIn();
     if (!isAuthenticated) {
         return NextResponse.json(
@@ -18,7 +18,7 @@ async function checkAuth(request: NextRequest) {
 //Creates a new post in the database
 export async function POST(request: NextRequest) {
     try {
-        const auth = await checkAuth(request);
+        const auth = await checkAuth();
         if(auth !== true) {
             return auth;
         } else {
@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
                 description: data.description,
                 imageUrl: data.imageUrl,
                 urlId: toUrlPath(data.title),
-                category: "Node", // Default category because form doesn't have category input
-                active: true, // Default active status
+                category: data.category,
+                active: true, // True on default
                 date: new Date(),
             },
         });
