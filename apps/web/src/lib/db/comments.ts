@@ -1,22 +1,26 @@
-// import { client } from '@repo/db/client';
+import { client } from '@repo/db/client';
 
-// export async function getActivePosts(postId: number) {
-//     const postsNoLikeCount = await client.db.comment.findMany({
-//         include: {
-//           Replies: true,
-//         },
-//         where: {
-//             postId,
-//         },
-//         orderBy: {
-//             commentId: "asc",
-//         },
-//     });
+export async function getCommentsAndReplies(postId: number) {
+    try {
+        const comments = await client.db.comment.findMany({
+            include: {
+            Replies: {
+                orderBy: {
+                    replyId: 'asc',
+                },
+            },
+            },
+            where: {
+                postId,
+            },
+            orderBy: {
+                commentId: "asc",
+            },
+        });
 
-//     const posts = postsNoLikeCount.map((post) => ({
-//         ...post,
-//         likes: post.Likes.length,
-//     }));
-
-//     return posts;
-// }
+        return comments;
+    } catch (error) {
+        console.error("Error fetching comments and replies:", error);
+        throw new Error("Failed to fetch comments and replies");
+    }
+}
