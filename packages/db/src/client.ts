@@ -7,6 +7,7 @@ declare global {
 
 export const createClient = () => {
   if (global.prisma) {
+    console.log("Prisma Client models: ", Object.keys(global.prisma));
     return global.prisma;
   }
 
@@ -20,6 +21,8 @@ export const createClient = () => {
   console.log(URL);
 
   global.prisma = prisma;
+  console.log("Prisma Client models: ", Object.keys(global.prisma));
+
   return prisma;
 };
 
