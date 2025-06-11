@@ -1,4 +1,4 @@
-import { seed } from "@repo/db/seed";
+import { seed } from "../../../../packages/db/src/seed";
 import { expect, test, type Page } from "./fixtures";
 
 test.beforeAll(async () => {
@@ -163,6 +163,58 @@ test.describe("HOME SCREEN", () => {
 
       await page.getByPlaceholder("Search").fill("Fatboy");
       await expect(page).toHaveURL("/search?q=Fatboy");
+    },
+  );
+
+  test(
+    "Web - Pagination splits posts by 3",
+    {
+      tag: "@Pagination",
+    },
+    async ({ page }) => {
+      await page.goto("/");
+
+      // Pagination > The pagination buttons work as expected
+      await expect(await page.locator("article").count()).toBe(3);
+      // await a button click to go to next page
+      await page.getByRole("button", { name: "Next" }).click();
+      await expect(await page.locator("article").count()).toBe(1);
+      // await a button click to go to previous page
+      await page.getByRole("button", { name: "Previous" }).click();
+      await expect(await page.locator("article").count()).toBe(3);
+      // await a button click to go to page 2
+      await page.getByRole("button", { name: "2" }).click();
+      await expect(await page.locator("article").count()).toBe(1);
+      // await a button click to go to page 1
+      await page.getByRole("button", { name: "1" }).click();
+      await expect(await page.locator("article").count()).toBe(3);
+    },
+  );
+
+  test(
+    "Web - Buttons are disabled when appropriate",
+    {
+      tag: "@Pagination",
+    },
+    async ({ page }) => {
+      await page.goto("/");
+
+      // Pagination > The pagination buttons are disabled when on the first or last page
+      await expect(
+        page.getByRole("button", { name: "Previous", exact: true }),
+      ).toBeDisabled();
+      await expect(
+        page.getByRole("button", { name: "Next", exact: true }),
+      ).toBeEnabled();
+
+      await page.getByRole("button", { name: "Next", exact: true }).click();
+
+      await expect(
+        page.getByRole("button", { name: "Next", exact: true }),
+      ).toBeDisabled();
+      await expect(
+        page.getByRole("button", { name: "Previous", exact: true }),
+      ).toBeEnabled();
     },
   );
 });

@@ -1,11 +1,15 @@
 import { client } from "./client.js";
-import { posts } from "@repo/db/data";
+import { posts, comments, replies } from "./data.js";
 
 export async function seed() {
-//   TODO: Uncomment below once you set up Prisma and loaded data to your database
   console.log("🌱 Seeding data");
   await client.db.like.deleteMany();
+  await client.db.reply.deleteMany();
+  await client.db.comment.deleteMany();
   await client.db.post.deleteMany();
+
+
+  console.log("📝 Seeding posts...");
   for (const post of posts) {
     await client.db.post.create({
       data: {
@@ -31,4 +35,31 @@ export async function seed() {
       });
     }
   }
+
+  console.log("💬 Seeding comments...");
+  for(const comment of comments) {
+    await client.db.comment.create({
+      data: {
+        commentId: comment.commentId,
+        postId: comment.postId,
+        comment: comment.comment,
+      },
+    });
+  }
+  
+  console.log("↩️ Seeding replies...");
+  for(const reply of replies) {
+    await client.db.reply.create({
+      data: {
+        replyId: reply.replyId,
+        commentId: reply.commentId,
+        reply: reply.reply,
+      },
+    });
+  }
+
+  console.log("✅ Seeding completed!");
 }
+
+
+

@@ -1,4 +1,4 @@
-import { seed } from "@repo/db/seed";
+import { seed } from "../../../../packages/db/src/seed";
 import { expect, test } from "./fixtures";
 
 test.beforeAll(async () => {
@@ -18,7 +18,9 @@ test.describe("ADMIN LIST SCREEN", () => {
     async ({ userPage }) => {
       await userPage.goto("/");
 
-      await expect(await userPage.locator("article").count()).toBe(4);
+      await expect(await userPage.locator("article").count()).toBe(3);
+      await userPage.getByRole("button", { name: "2" }).click();
+      await expect(await userPage.locator("article").count()).toBe(2);
     },
   );
 
@@ -46,7 +48,7 @@ test.describe("ADMIN LIST SCREEN", () => {
 
       await userPage.getByLabel("Filter by Content:").clear();
       await userPage.waitForTimeout(1000); // Wait for the filter to apply
-      await expect(await userPage.locator("article").count()).toBe(4);
+      await expect(await userPage.locator("article").count()).toBe(3);
     },
   );
 
@@ -140,51 +142,74 @@ test.describe("ADMIN LIST SCREEN", () => {
         "Boost your conversion rate",
       );
       expect(await articles[2].innerText()).toContain(
+        "Fifth post",
+      );
+
+      await userPage.getByRole("button", { name: "2" }).click();
+
+      let articles2 = await userPage.locator("article").all();
+      expect(await articles2[0].innerText()).toContain(
         "No front end framework is the best",
       );
-      expect(await articles[3].innerText()).toContain(
+      expect(await articles2[1].innerText()).toContain(
         "Visual Basic is the future",
       );
 
       // title-desc
       await userPage.getByLabel("Sort By:").selectOption("title-desc");
       await userPage.waitForTimeout(1000); // Wait for the filter to apply
+      await userPage.getByRole("button", { name: "1" }).click();
       articles = await userPage.locator("article").all();
 
-      expect(await articles[3].innerText()).toContain(
-        "Better front ends with Fatboy Slim",
-      );
       expect(await articles[2].innerText()).toContain(
-        "Boost your conversion rate",
+        "Fifth post",
       );
       expect(await articles[1].innerText()).toContain(
         "No front end framework is the best",
       );
       expect(await articles[0].innerText()).toContain(
         "Visual Basic is the future",
+      );
+
+      await userPage.getByRole("button", { name: "2" }).click();
+      articles2 = await userPage.locator("article").all();
+      expect(await articles2[1].innerText()).toContain(
+        "Better front ends with Fatboy Slim",
+      );
+      expect(await articles2[0].innerText()).toContain(
+        "Boost your conversion rate",
       );
 
       // date-asc
       await userPage.getByLabel("Sort By:").selectOption("date-asc");
       await userPage.waitForTimeout(1000); // Wait for the filter to apply
+      await userPage.getByRole("button", { name: "1" }).click();
       articles = await userPage.locator("article").all();
 
       expect(await articles[1].innerText()).toContain(
-        "Better front ends with Fatboy Slim",
+        "Fifth post",
       );
       expect(await articles[2].innerText()).toContain(
-        "Boost your conversion rate",
+        "Better front ends with Fatboy Slim",
       );
-      expect(await articles[3].innerText()).toContain(
+      
+      expect(await articles[0].innerText()).toContain(
+        "Visual Basic is the future",
+      );
+
+      await userPage.getByRole("button", { name: "2" }).click();
+      articles2 = await userPage.locator("article").all();
+      expect(await articles[1].innerText()).toContain(
         "No front end framework is the best",
       );
       expect(await articles[0].innerText()).toContain(
-        "Visual Basic is the future",
+        "Boost your conversion rate",
       );
 
       // date-desc
       await userPage.getByLabel("Sort By:").selectOption("date-desc");
       await userPage.waitForTimeout(1000); // Wait for the filter to apply
+      await userPage.getByRole("button", { name: "1" }).click();
       articles = await userPage.locator("article").all();
 
       expect(await articles[2].innerText()).toContain(
@@ -196,10 +221,14 @@ test.describe("ADMIN LIST SCREEN", () => {
       expect(await articles[0].innerText()).toContain(
         "No front end framework is the best",
       );
-      expect(await articles[3].innerText()).toContain(
+      await userPage.getByRole("button", { name: "2" }).click();
+      articles2 = await userPage.locator("article").all();
+      expect(await articles2[1].innerText()).toContain(
         "Visual Basic is the future",
       );
-
+      expect(await articles2[0].innerText()).toContain(
+        "Fifth post",
+      );
     },
   );
 

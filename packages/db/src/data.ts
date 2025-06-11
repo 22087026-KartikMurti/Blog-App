@@ -13,6 +13,18 @@ export type Post = {
   active: boolean;
 };
 
+export type Comment = {
+  commentId: number;
+  postId: number;
+  comment: string;
+};
+
+export type Reply = {
+  replyId: number;
+  commentId: number;
+  reply: string;
+}
+
 const content = `
   # Title 1
 
@@ -33,6 +45,10 @@ const description = `Illo sint voluptas. Error voluptates culpa eligendi.
 Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. 
 Sed exercitationem placeat consectetur nulla deserunt vel 
 iusto corrupti dicta laboris incididunt.`;
+
+const commentContent = `Illo sint voluptas. Error voluptates culpa eligendi.`;
+
+const replyContent = `Illo sint voluptas. Error voluptates culpa eligendi.`;
 
 export const posts: Post[] = [
   {
@@ -102,5 +118,65 @@ export const posts: Post[] = [
     views: 22,
     likes: 1,
     active: false,
+  },
+  {
+    id: 5,
+    title: "Fifth post",
+    urlId: "fifth-post",
+    description: `Illo sint voluptas. Error voluptates culpa eligendi.`,
+    content: content + " ... post5",
+    imageUrl: "https://m.media-amazon.com/images/I/51NqEfmmBTL.jpg",
+    date: new Date("Dec 16, 2013"),
+    category: "Random",
+    tags: "Random",
+    views: 0,
+    likes: 0,
+    active: true,
+  },
+];
+
+export const comments: Comment[] = [
+  {
+    commentId: 1,
+    postId: 1,
+    comment: commentContent + " ... comment1",
+  },
+  {
+    commentId: 2,
+    postId: 1,
+    comment: commentContent + " ... comment2",
+  },
+  {
+    commentId: 3,
+    postId: 2,
+    comment: commentContent + " ... comment3",
+  },
+  {
+    commentId: 4,
+    postId: 3,
+    comment: commentContent + " ... comment4",
+  },
+];
+
+export const replies: Reply[] = [
+  {
+    replyId: 1,
+    commentId: 1,
+    reply: replyContent + " ...reply 1",
+  },
+  {
+    replyId: 2,
+    commentId: 2,
+    reply: replyContent + " ...reply 2",
+  },
+  {
+    replyId: 3,
+    commentId: 2,
+    reply: replyContent + " ...reply 2.1",
+  },
+  {
+    replyId: 4,
+    commentId: 3,
+    reply: replyContent + " ...reply 3",
   },
 ];

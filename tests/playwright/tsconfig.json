@@ -9,7 +9,11 @@
     "lib": ["es2015", "dom"],
     "types": ["node"],
     "typeRoots": ["node_modules/@types", "./support"],
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": "../..",
+    "paths": {
+      "@repo/db/*": ["../../packages/db/src/*"],
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"]
 }

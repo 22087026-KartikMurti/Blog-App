@@ -10,7 +10,7 @@ interface BlogListProps {
   postsPerPage?: number;
 }
 
-export function BlogList({ posts, postsPerPage = 2 }: BlogListProps) {
+export function BlogList({ posts, postsPerPage = 3 }: BlogListProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const activePosts = posts.filter(post => post.active);
 
