@@ -96,8 +96,6 @@ export default async function Page({
           )}
         </article>
         <CommentSection postId={updatedPost.id} initialComments={comments} />
-        {/* Uncomment the line below to show a loading message while comments are being fetched */}
-        {/* <p className="text-gray-600 dark:text-gray-300">Loading comments...</p> */}
       </div>
     </AppLayout>
   );

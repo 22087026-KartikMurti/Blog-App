@@ -14,7 +14,7 @@ export async function getCommentsAndReplies(postId: number) {
                 postId,
             },
             orderBy: {
-                commentId: "asc",
+                commentId: "desc",
             },
         });
 
