@@ -3,9 +3,9 @@
 import { useState, useRef } from "react";
 import { Button } from "@repo/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import QuillEditor from "./RichTextEditor";
 import TurndownService from "turndown";
+import sanitize from "sanitize-html";
 
 interface PostFormData {
     id: number;
@@ -50,6 +50,21 @@ export function PostForm({ initialData }: PostFormProps) {
         tags: "",
     });
 
+    const sanitizeContent = (html: string) => {
+        return sanitize(html, {
+            allowedTags: [
+                'h1', 'h2', 'h3', 'p',
+                'strong', 'em', 'u', 's',
+                'ol', 'ul', 'li', 
+                'br', 'span', 'div'
+            ],
+            allowedAttributes: {
+                '*': ['style', 'class'],
+            },
+            disallowedTagsMode: 'discard',
+        });
+    }
+
     const validateForm = (): boolean => {
         const errors: FormErrors = {};
 
@@ -67,12 +82,15 @@ export function PostForm({ initialData }: PostFormProps) {
             errors.description = "Description is too long. Maximum is 200 characters";
         }
 
+
         const stripHtml = (html: string) => {
             const div = document.createElement("div");
             div.innerHTML = html;
             return div.textContent || div.innerText || "";
         };
-        if (!stripHtml(formData.content).trim()) {
+
+        const sanitizedContent = sanitizeContent(formData.content);
+        if (!stripHtml(sanitizedContent).trim()) {
             errors.content = "Content is required";
         }
 
