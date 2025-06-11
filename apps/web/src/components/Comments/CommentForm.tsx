@@ -28,6 +28,12 @@ export default function CommentForm({ postId, onCommentAdded }: CommentFormProps
       allowedTags: [],
       allowedAttributes: {},
     });
+
+    if (sanitizedComment.length === 0) {
+      setError('Comment contains invalid content');
+      setComment('');
+      return;
+    }
     setIsSubmitting(true);
     setError('');
 

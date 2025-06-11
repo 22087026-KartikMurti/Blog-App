@@ -72,4 +72,96 @@ test.describe("DETAIL SCREEN", () => {
       await expect(page.getByText("3 likes")).toBeVisible();
     },
   );
+
+  test(
+    "Can comment on posts",
+    {
+      tag: "@comment",
+    },
+    async ({ page }) => {
+      // BACKEND / CLIENT > User can comment on the post on the detail screen, NOT on the list
+
+      await page.goto("/post/fifth-post");
+
+      // COMMENT > User can add a comment to the post
+      await page.getByPlaceholder("Add a comment...").fill("This is a test comment");
+      await page.getByRole("button", { name: "Post Comment" }).click();
+      await page.waitForTimeout(1000); // wait for the comment to be posted
+      await expect(page.getByText("This is a test comment")).toBeVisible();
+    },
+  );
+
+  test(
+    "Can reply to comments",
+    {
+      tag: "@comment",
+    },
+    async ({ page }) => {
+      // BACKEND / CLIENT > User can reply to comments on the post detail screen
+
+      await page.goto("/post/fifth-post");
+
+      // COMMENT > User can reply to a comment
+      await page.getByPlaceholder("Add a comment...").fill("This is a test comment");
+      await page.getByRole("button", { name: "Post Comment" }).click();
+      await page.waitForTimeout(1000); // wait for the comment to be posted
+      await expect(page.getByText("This is a test comment")).toBeVisible();
+
+      // Reply to the comment
+      await page.getByPlaceholder("Write a reply...").fill("This is a reply");
+      await page.getByRole("button", { name: "Post Reply" }).click();
+      await page.waitForTimeout(1000); // wait for the reply to be posted
+      await expect(page.getByText("This is a reply")).toBeVisible();
+    },
+  );
+
+  test(
+    "Posted comments and replies are sanitised",
+    {
+      tag: "@comment",
+    },
+    async ({ page }) => {
+      // BACKEND / CLIENT > User can post comments and replies, which are sanitised to prevent XSS attacks
+
+      let scriptExecuted = false;
+      page.on('dialog', async dialog => {
+        scriptExecuted = true;
+        await dialog.dismiss(); // Dismiss the alert to prevent it from blocking the test
+      })
+
+      await page.goto("/post/fifth-post");
+
+      // COMMENT > User can not add a comment with HTML tags
+      await page.getByPlaceholder("Add a comment...").fill("<script>alert('XSS')</script>");
+      await page.getByRole("button", { name: "Post Comment" }).click();
+      await page.waitForTimeout(1000); // wait for the comment to be posted
+
+      // Check that the comment does not contain the script tag
+      expect(scriptExecuted).toBe(false);
+      const errorMessage = await page.getByText("Comment contains invalid content");
+      await expect(errorMessage).toBeVisible();
+      await expect(page.getByText("<script>alert('XSS')</script>")).not.toBeVisible();
+
+      await page.getByPlaceholder("Add a comment...").fill("This is a valid comment");
+      await page.getByRole("button", { name: "Post Comment" }).click();
+      await page.waitForTimeout(1000); // wait for the comment to be posted
+      await expect(page.getByText("This is a valid comment")).toBeVisible();
+
+      // REPLY > User can not add a reply with HTML tags
+      await page.getByPlaceholder("Write a reply...").fill("<script>alert('XSS')</script>");
+      await page.getByRole("button", { name: "Post Reply" }).click();
+      await page.waitForTimeout(1000); // wait for the reply to be posted
+
+      // Check that the reply does not contain the script tag
+      expect(scriptExecuted).toBe(false);
+      const replyErrorMessage = await page.getByText("Reply contains invalid content");
+      await expect(replyErrorMessage).toBeVisible();
+      await expect(page.getByText("<script>alert('XSS')</script>")).not.toBeVisible();
+
+      await page.getByPlaceholder("Write a reply...").fill("This is a valid reply");
+      await page.getByRole("button", { name: "Post Reply" }).click();
+      await page.waitForTimeout(1000); // wait for the reply to be posted
+      await expect(page.getByText("This is a valid reply")).toBeVisible();
+    },
+  )
 });

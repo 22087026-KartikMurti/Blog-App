@@ -9,6 +9,7 @@
     "test-2": "pnpm playwright test --grep \"@a2\"",
     "test-3": "pnpm playwright test --grep \"@a3\"",
     "test-pagination": "pnpm playwright test --grep \"@Pagination\"",
+    "test-comment": "pnpm playwright test --grep \"@comment\"",
     "ui": "pnpm playwright test --ui",
     "dev:test-1": "pnpm playwright test --ui --grep \"@a1\"",
     "dev:test-2": "pnpm playwright test --ui --grep \"@a1|@a2\"",

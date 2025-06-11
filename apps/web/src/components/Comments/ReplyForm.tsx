@@ -30,6 +30,13 @@ export default function ReplyForm({ commentId, onReplyAdded }: ReplyFormProps) {
       allowedTags: [],
       allowedAttributes: {},
     });
+
+    if (sanitizedReply.length === 0) {
+      setError('Reply contains invalid content');
+      setReply('');
+      return;
+    }
+    
     setIsSubmitting(true);
     setError('');
 
