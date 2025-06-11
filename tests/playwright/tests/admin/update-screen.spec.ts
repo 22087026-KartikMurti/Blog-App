@@ -259,4 +259,98 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       ).toBeVisible();
     },
   );
+
+  test(
+    "Rich Text Editor works",
+    {
+      tag: "@RT-Editor",
+    },
+    async ({ userPage }) => {
+      await userPage.goto("/posts/no-front-end-framework-is-the-best");
+
+      // UPDATE SCREEN > Rich Text Editor works
+
+      await userPage.waitForTimeout(1000); // wait for the editor to load
+      const editor = userPage.locator('.ql-editor');
+      await editor.click();
+      await userPage.keyboard.press('Control+A');
+      await userPage.keyboard.press("Backspace");
+      await userPage.keyboard.type("This is a test content");
+      await expect(editor).toHaveText("This is a test content");
+
+      // Check if formatting works
+      await userPage.keyboard.press('Control+A');
+      await userPage.locator('.ql-bold').click();
+      const boldText = await editor.evaluate(
+        (el) => {
+          return el.innerHTML.includes('<b>') ||
+                el.innerHTML.includes('<strong>');
+        }
+      );
+      expect(boldText).toBe(true);
+      await expect(editor).toHaveText("This is a test content");
+
+      await userPage.getByLabel("Description").clear();
+      await userPage.getByLabel("Description").fill("New Description");
+
+      await userPage.getByRole("button", { name: "Save" }).click();
+      await expect(
+        userPage.getByText("Post updated successfully"),
+      ).toBeVisible();
+    },
+  );
+
+  test(
+    "Sanitisation of RT-Editor works",
+    {
+      tag: "@RT-Editor",
+    },
+    async ({ userPage }) => {
+      await userPage.goto("/posts/no-front-end-framework-is-the-best");
+
+      // UPDATE SCREEN > Sanitisation of Rich Text Editor works
+
+      await userPage.waitForTimeout(1000); // wait for the editor to load
+      const editor = userPage.locator('.ql-editor');
+      await editor.click();
+      await userPage.keyboard.press('Control+A');
+      await userPage.keyboard.press("Backspace");
+      await userPage.keyboard.press("Enter");
+      await userPage.keyboard.press('Control+A');
+      await userPage.keyboard.press("Backspace");
+      await userPage.keyboard.type("<script>alert('XSS');</script>");
+      await expect(editor).toHaveText("<script>alert('XSS');</script>");
+
+      await userPage.getByLabel("Description").clear();
+      await userPage.getByLabel("Description").fill("New Description");
+
+      // Check if sanitisation works
+      await userPage.getByRole("button", { name: "Save" }).click();
+      await userPage.waitForTimeout(1000);
+      await expect(
+        userPage.getByText("Please fix the errors before saving"),
+      ).toBeVisible();
+      await expect(userPage.getByText("Content contains invalid HTML")).toBeVisible();
+      
+      await userPage.locator('.ql-editor').click();
+      await userPage.keyboard.press('Control+A');
+      await userPage.keyboard.press("Backspace");
+      await userPage.keyboard.type("Write something..."); // Just text without script tags
+      await expect(editor).toHaveText("Write something...");
+      await userPage.keyboard.press('Enter');
+      await userPage.keyboard.type("<script>alert('XSS');</script>"); // The script tags here
+
+      await userPage.getByRole("button", { name: "Save" }).click();
+      await expect(
+        userPage.getByText("Post updated successfully"),
+      ).toBeVisible();
+      await expect(userPage.getByText("Content contains invalid HTML")).not.toBeVisible();
+
+      // Check if the script tag is removed
+      await userPage.goto("/posts/no-front-end-framework-is-the-best");
+      const postContent = await userPage.locator('.ql-editor').textContent();
+      expect(postContent).toContain("Write something...");
+      expect(postContent).not.toContain("<script>alert('XSS');</script>");
+    },
+  )
 });

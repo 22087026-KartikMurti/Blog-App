@@ -82,15 +82,13 @@ export function PostForm({ initialData }: PostFormProps) {
             errors.description = "Description is too long. Maximum is 200 characters";
         }
 
-
         const stripHtml = (html: string) => {
             const div = document.createElement("div");
             div.innerHTML = html;
             return div.textContent || div.innerText || "";
         };
 
-        const sanitizedContent = sanitizeContent(formData.content);
-        if (!stripHtml(sanitizedContent).trim()) {
+        if (!stripHtml(formData.content).trim()) {
             errors.content = "Content is required";
         }
 
@@ -146,9 +144,19 @@ export function PostForm({ initialData }: PostFormProps) {
 
             // Convert HTML content from the editor to Markdown for storage
             const contentMarkdown = turndownService.turndown(formData.content);
+            const sanitizedContent = sanitizeContent(contentMarkdown.trimEnd());
+            if (sanitizedContent.length === 0) {
+                setFormErrors((prev) => ({
+                    ...prev,
+                    content: "Content contains invalid HTML",
+                }));
+                setShowErrorBanner(true);
+                setIsSaving(false);
+                return;
+            }
             const updatedFormData = {
                 ...formData,
-                content: contentMarkdown
+                content: sanitizedContent,
             };
 
             const response = await fetch(endpoint, {
@@ -166,6 +174,8 @@ export function PostForm({ initialData }: PostFormProps) {
             setIsSaving(false);
         } catch (error) {
             console.error("Error saving post:", error);
+            setIsSaving(false);
+            setShowErrorBanner(true);
         }
     };
 

@@ -42,9 +42,7 @@ export async function PATCH(
     }
     const { postId } = await params;
     const pId = parseInt(postId);
-    
-    // const postId = parseInt(await params.postId);
-    
+        
     if (isNaN(pId)) {
       return NextResponse.json(
         { message: "Invalid post ID" },
