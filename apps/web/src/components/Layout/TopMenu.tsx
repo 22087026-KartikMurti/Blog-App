@@ -28,9 +28,6 @@ export function TopMenu({ query }: { query?: string }) {
     
   );
 
-  // TODO: create and hook the search input to the handleSearch function
-  //       make sure you are able to explain what the handleSearch is doing and what debounce does
-
   return (
     <div className="flex items-center justify-between space-x-4">
       <form action="#" method="GET" className="grid flex-1 grid-cols-1 ml-2 mt-2">

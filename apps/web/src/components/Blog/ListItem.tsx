@@ -27,7 +27,7 @@ export function BlogListItem({ post }: { post: Post }) {
         <h3 className="text-xl font-semibold mb-2">
           <Link 
             href={`/post/${post.urlId}`} 
-            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="text-gray-700 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-400 hover:underline"
           >
             {post.title}
           </Link>

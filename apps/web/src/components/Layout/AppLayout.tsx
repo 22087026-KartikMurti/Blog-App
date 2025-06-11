@@ -16,10 +16,10 @@ export async function AppLayout({
           <LeftMenu />
         </div>
         <div className="flex-1 h-screen overflow-y-auto text-[color:var(--text)]">
-        <Content>
           <TopMenu query={query} />
-          {children}
-        </Content>
+          <Content>
+            {children}
+          </Content>
         </div>
       </div>
       </ThemeProvider>
