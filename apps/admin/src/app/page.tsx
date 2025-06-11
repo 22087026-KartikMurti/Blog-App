@@ -21,8 +21,6 @@ export default async function Home({
     active?: string;
   }>;
 }) {
-  // use the is logged in function to check if user is authorised
-  // we will use the cookie based approach
   const loggedIn = await isLoggedIn();
 
   if (!loggedIn) {
