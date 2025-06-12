@@ -1,5 +1,5 @@
 import { client } from "./client.ts";
-import { posts, comments, replies } from "./data.js";
+import { posts, comments, replies } from "./data.ts";
 
 export async function seed() {
   console.log("🌱 Seeding data");
