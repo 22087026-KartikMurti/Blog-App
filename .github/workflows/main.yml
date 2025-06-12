@@ -12,17 +12,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.2.0
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
-          cache: 'npm'
+          node-version: 18
+          cache: 'pnpm'
           
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm i
         
       - name: Run Lint
-        run: npm run lint
+        run: pnpm run lint
 
   typecheck:
     name: Type Check
@@ -30,17 +35,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.2.0
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
-          cache: 'npm'
+          node-version: 18
+          cache: 'pnpm'
           
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm i
         
       - name: Run Type Check
-        run: npm run typecheck
+        run: pnpm run typecheck
 
   build:
     name: Build
@@ -51,7 +61,7 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD || 'postgres_test' }}
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: blog_app_test
         ports:
           - 5432:5432
@@ -62,22 +72,25 @@ jobs:
           --health-retries 5
     steps:
       - uses: actions/checkout@v4
-      
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
-          cache: 'npm'
+          node-version: 18
+          cache: 'pnpm'
           
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm i
 
       - name: Create environment files
         run: |
          
           # Create db .env
           cat > packages/db/.env << EOL
-          DATABASE_URL=postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/blog_app_test
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/blog_app_test
           EOL
           
           # Create admin app .env - using secrets
@@ -90,15 +103,15 @@ jobs:
       - name: Setup Database Schema
         run: |
           cd packages/db
-          npx prisma migrate deploy
+          pnpx prisma migrate deploy
         env:
-          DATABASE_URL: postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/blog_app_test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/blog_app_test
 
       - name: Build Web App
-        run: npm run build --workspace=apps/web
+        run: pnpm run build --workspace=apps/web
         
       - name: Build Admin App
-        run: npm run build --workspace=apps/admin
+        run: pnpm run build --workspace=apps/admin
   
   playwright:
     name: Playwright Tests
@@ -110,7 +123,7 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: blog_app_test
         ports:
           - 5432:5432
@@ -121,19 +134,20 @@ jobs:
           --health-retries 5
     steps:
     - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v2
     - uses: actions/setup-node@v4
       with:
-        node-version: lts/*
-        cache: 'npm'
+        node-version: 18
+        cache: 'pnpm'
 
     - name: Install dependencies
-      run: npm ci
+      run: pnpm i
 
     - name: Create environment files
       run: |
         # Create db .env for Playwright tests
         cat > packages/db/.env << EOL
-        DATABASE_URL=postgresql://postgres:${{ secrets.POSTGRES_PASSWORD || 'postgres_test' }}@localhost:5432/blog_app_test
+        DATABASE_URL=postgresql://postgres:postgres@localhost:5432/blog_app_test
         EOL
         
         # Create admin app .env - using secrets
@@ -144,17 +158,17 @@ jobs:
         EOL
 
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: pnpx playwright install --with-deps
 
     - name: Setup Database Schema for tests
       run: |
         cd packages/db
-        npx prisma migrate deploy
+        pnpx prisma migrate deploy
       env:
-        DATABASE_URL: postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/blog_app_test
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/blog_app_test
       
     - name: Run Playwright tests
-      run: npm test-all
+      run: pnpm test-all
       
     - uses: actions/upload-artifact@v4
       if: ${{ always() }}
