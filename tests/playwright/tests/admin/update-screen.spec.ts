@@ -1,4 +1,4 @@
-import { seed } from "@repo/db/seed";
+import { seed } from "../../../../packages/db/src/seed";
 import { expect, test } from "./fixtures";
 
 test.beforeEach(async () => {
