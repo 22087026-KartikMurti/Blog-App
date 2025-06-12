@@ -71,7 +71,7 @@ const QuillEditor = forwardRef<any, QuillEditorProps>(
     }
 
     return (
-      <div className="quill-editor w-full mb-8">
+      <div className="quill-editor w-full mb-15">
         <ReactQuill
           theme="snow"
           value={editorValue}

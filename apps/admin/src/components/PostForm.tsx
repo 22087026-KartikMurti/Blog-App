@@ -183,7 +183,12 @@ export function PostForm({ initialData }: PostFormProps) {
 
     return (
         <>
-            <Link href="/">Home</Link>
+            <Link 
+                href="/"
+                className="inline-block mb-4 px-4 py-2 bg-blue-800 text-white rounded hover:bg-blue-700 transition-colors"
+            >
+                ← Back to Home
+            </Link>
             {successMessage && (
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                     {successMessage}
@@ -243,7 +248,7 @@ export function PostForm({ initialData }: PostFormProps) {
                     <p className="text-red-500 text-sm mt-1">{formErrors.description}</p>}
                 </div>
 
-                <div>
+                <div className="mb-6">
                     <p className="block mb-2">
                         Content
                     </p>
@@ -308,18 +313,20 @@ export function PostForm({ initialData }: PostFormProps) {
                     {formErrors.tags && 
                     <p className="text-red-500 text-sm mt-1">{formErrors.tags}</p>}
                 </div>
-
-                <Button
-                    type="submit"
-                    className={`px-6 py-2 rounded ${
-                        isSaving
-                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                            : 'bg-blue-500 text-white hover:bg-blue-600' 
-                    }`}
-                    disabled={isSaving}
-                >
-                    {isSaving ? "Saving..." : "Save"}
-                </Button>
+                
+                <div className="flex justify-center">
+                    <Button
+                        type="submit"
+                        className={`px-6 py-2 rounded ${
+                            isSaving
+                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                : 'bg-blue-500 text-white hover:bg-blue-600' 
+                        }`}
+                        disabled={isSaving}
+                    >
+                        {isSaving ? "Saving..." : "Save"}
+                    </Button>
+                </div>
             </form>
         </>
     )

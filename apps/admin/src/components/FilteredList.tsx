@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { FilteredItem } from '../components/FilteredItem';
 import { Post } from "@repo/db/data";
+import { Button } from '@repo/ui/button';
 
 export function FilteredList({
     filtered,
@@ -48,7 +49,7 @@ export function FilteredList({
         
         return (
             <div className="flex items-center justify-between py-4">
-                <button
+                <Button
                     onClick={goToPreviousPage}
                     disabled={currentPage === 1}
                     className={`px-3 py-1 text-sm rounded ${
@@ -58,11 +59,11 @@ export function FilteredList({
                     }`}
                 >
                     Previous
-                </button>
+                </Button>
                 
                 <div className="hidden sm:flex space-x-1">
                     {[...Array(totalPages)].map((_, i) => (
-                        <button
+                        <Button
                             key={i}
                             onClick={() => paginate(i + 1)}
                             className={`w-8 h-8 text-sm rounded ${
@@ -72,11 +73,11 @@ export function FilteredList({
                             }`}
                         >
                             {i + 1}
-                        </button>
+                        </Button>
                     ))}
                 </div>
                 
-                <button
+                <Button
                     onClick={goToNextPage}
                     disabled={currentPage === totalPages}
                     className={`px-3 py-1 text-sm rounded ${
@@ -86,32 +87,19 @@ export function FilteredList({
                     }`}
                 >
                     Next
-                </button>
+                </Button>
             </div>
         );
     };
 
-    if(filtered) {
-        return (
-            <>
-                <div className="w-full">
-                    {filteredPosts.length > 0 && currentPosts.map((post) => (
-                        <FilteredItem key={post.id} post={post} />
-                    ))}
-                </div>
-                <PaginationControls />
-            </>
-        );
-    } else {
-        return (
-            <>
-                <div>
-                    {currentPosts.map((post) => (
-                        <FilteredItem key={post.id} post={post} />
-                    ))}
-                </div>
-                <PaginationControls />
-            </>
-        );
-    }
+    return (
+        <>
+            <div className="w-full">
+                {filteredPosts.length > 0 && currentPosts.map((post) => (
+                    <FilteredItem key={post.id} post={post} />
+                ))}
+            </div>
+            <PaginationControls />
+        </>
+    );
 };
