@@ -13,7 +13,7 @@ test.describe("ADMIN HOME SCREEN", () => {
     },
     async ({ page }) => {
       await page.goto("/");
-      await expect(page.getByText("Sign In", { exact: true })).toBeVisible();
+      await expect(page.getByText("Sign in", { exact: true })).toBeVisible();
 
       // HOME SCREEN > Shows Login screen if not logged
       await expect(
@@ -30,9 +30,11 @@ test.describe("ADMIN HOME SCREEN", () => {
     async ({ page }) => {
       await page.goto("/");
 
-      // HOME SCREEN > Authenticate the current client using a hard-coded password
+      // HOME SCREEN > Authenticate the current client using a hard-coded username and password
+      
+      await page.getByLabel("Username", { exact: true }).fill("admin");
       await page.getByLabel("Password", { exact: true }).fill("123");
-      await page.getByText("Sign In", { exact: true }).click();
+      await page.getByText("Sign in", { exact: true }).click();
 
       await expect(page.getByText("Admin of Full Stack Blog")).toBeVisible();
 
