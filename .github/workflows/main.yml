@@ -73,6 +73,7 @@ jobs:
       - name: Run Tests
         run: |
           cd tests/playwright
+          pnpm exec playwright install chromium
           pnpm test-all
         
       - name: Upload test results
