@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "vercel-build": "cd ../../packages/db && pnpm db:generate && pnpm db:push --accept-data-loss && cd ../../apps/admin && next build"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
