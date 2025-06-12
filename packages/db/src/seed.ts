@@ -1,5 +1,5 @@
-import { client } from "@repo/db/client";
-import { posts, comments, replies } from "./data.ts";
+import { client } from "./client.js";
+import { posts, comments, replies } from "./data.js";
 
 export async function seed() {
   console.log("🌱 Seeding data");
