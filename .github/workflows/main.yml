@@ -50,10 +50,18 @@ jobs:
           
           # Create .env file in apps/admin
           cat > apps/admin/.env << EOL
-          ADMIN=admin
-          PASSWORD=123
-          JWT_SECRET=super-secret-password
+          ADMIN=${{ secrets.ADMIN }}
+          PASSWORD=${{ secrets.PASSWORD }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
           EOL
+
+          if [ -f apps/admin/.env ]; then
+            echo "✅ .env file was successfully created in apps/admin"
+            echo "File size: $(wc -c < apps/admin/.env) bytes"
+          else 
+            echo "❌ Failed to create .env file in apps/admin"
+            exit 1
+          fi
           
       - name: Setup Database
         run: |
