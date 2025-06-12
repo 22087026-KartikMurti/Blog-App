@@ -12,7 +12,7 @@
     "jsx": "preserve",
     "baseUrl": "../..",
     "paths": {
-      "@repo/db/*": ["../../packages/db/src/*"],
+      "@repo/db/*": ["../../../../packages/db/src/*"],
     }
   },
   "include": ["**/*.ts", "**/*.tsx"]
