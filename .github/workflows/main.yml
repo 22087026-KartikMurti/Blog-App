@@ -50,7 +50,7 @@ jobs:
           
           # Create .env file in apps/admin
           cat > apps/admin/.env << EOL
-          ADMIN={{ secrets.ADMIN_USERNAME }}
+          ADMIN={{ secrets.ADMIN }}
           PASSWORD={{ secrets.PASSWORD }}
           JWT_SECRET={{ secrets.JWT_SECRET }}
           EOL
