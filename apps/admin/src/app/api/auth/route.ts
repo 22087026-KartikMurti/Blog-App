@@ -7,6 +7,9 @@ export async function POST(request: NextRequest) {
     try {
         const { username, password } = await request.json();
         
+        console.log("Login attempt with username:", username);
+        console.log("Expected username:", env.ADMIN);
+        console.log("Expected password:", env.PASSWORD);
         // Check if the username is correct
         if(username !== env.ADMIN) {
             return NextResponse.json(
