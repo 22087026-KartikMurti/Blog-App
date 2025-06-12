@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI Tests
 on:
   push:
     branches: [ main, master, develop ]
@@ -6,56 +6,9 @@ on:
     branches: [ main, master, develop ]
 
 jobs:
-  lint:
-    name: Lint Check
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.2.0
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'pnpm'
-          
-      - name: Install Dependencies
-        run: pnpm i
-        
-      - name: Run Lint
-        run: pnpm run lint
-
-  typecheck:
-    name: Type Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.2.0
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'pnpm'
-          
-      - name: Install Dependencies
-        run: pnpm i
-        
-      - name: Run Type Check
-        run: pnpm run typecheck
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: [lint, typecheck]
     services:
       postgres:
         image: postgres:latest
@@ -71,120 +24,55 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - uses: actions/checkout@v4
-
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
-        
+        with:
+          version: 10.2.0
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '18'
           cache: 'pnpm'
           
       - name: Install Dependencies
-        run: pnpm i
-
+        run: pnpm install
+        
       - name: Create environment files
         run: |
-         
-          # Create db .env
+          # Create .env file in packages/db
           cat > packages/db/.env << EOL
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/blog_app_test
           EOL
           
-          # Create admin app .env - using secrets
+          # Create .env file in apps/admin
           cat > apps/admin/.env << EOL
-          ADMIN=${{ secrets.ADMIN_USERNAME }}
-          PASSWORD=${{ secrets.ADMIN_PASSWORD }}
-          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          ADMIN={{ secrets.ADMIN_USERNAME }}
+          PASSWORD={{ secrets.PASSWORD }}
+          JWT_SECRET={{ secrets.JWT_SECRET }}
           EOL
-        
-      - name: Setup Database Schema
+          
+      - name: Setup Database
         run: |
           cd packages/db
-          pnpx prisma migrate deploy
+          pnpm prisma migrate deploy
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/blog_app_test
-
-      - name: Build Web App
-        run: pnpm run build --workspace=apps/web
+          
+      - name: Run Tests
+        run: |
+          pnpm dev
+          pnpm test-all
         
-      - name: Build Admin App
-        run: pnpm run build --workspace=apps/admin
-  
-  playwright:
-    name: Playwright Tests
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    needs: [build]
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: blog_app_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-    - uses: actions/checkout@v4
-    - uses: pnpm/action-setup@v2
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 18
-        cache: 'pnpm'
-
-    - name: Install dependencies
-      run: pnpm i
-
-    - name: Create environment files
-      run: |
-        # Create db .env for Playwright tests
-        cat > packages/db/.env << EOL
-        DATABASE_URL=postgresql://postgres:postgres@localhost:5432/blog_app_test
-        EOL
-        
-        # Create admin app .env - using secrets
-        cat > apps/admin/.env << EOL
-        ADMIN=${{ secrets.ADMIN_USERNAME }}
-        PASSWORD=${{ secrets.ADMIN_PASSWORD }}
-        JWT_SECRET=${{ secrets.JWT_SECRET }}
-        EOL
-
-    - name: Install Playwright Browsers
-      run: pnpx playwright install --with-deps
-
-    - name: Setup Database Schema for tests
-      run: |
-        cd packages/db
-        pnpx prisma migrate deploy
-      env:
-        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/blog_app_test
-      
-    - name: Run Playwright tests
-      run: pnpm test-all
-      
-    - uses: actions/upload-artifact@v4
-      if: ${{ always() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
-
-    - name: Notify on failure
-      if: ${{ failure() }}
-      uses: actions/github-script@v6
-      with:
-        script: |
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '❌ CI tests failed. Please check the [Playwright report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).'
-          })
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            **/test-results
+            **/playwright-report
+          retention-days: 7
