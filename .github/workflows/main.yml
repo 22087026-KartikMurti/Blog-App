@@ -61,13 +61,6 @@ jobs:
           pnpm prisma migrate deploy
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/blog_app_test
-
-      - name: Start Dev Server
-        run: |
-          # Start dev server in the background
-          pnpm dev &
-          #wait for the server to be ready
-          sleep 30
           
       - name: Run Tests
         run: |
