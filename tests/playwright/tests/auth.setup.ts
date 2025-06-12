@@ -1,5 +1,4 @@
 import { test as setup } from "@playwright/test";
-import fs from "fs";
 
 ////////////////////////////////////////////////////////
 // Authentication for Assignment 3

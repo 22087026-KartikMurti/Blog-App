@@ -1,4 +1,4 @@
-import { seed } from "../../../../packages/db/src/seed";
+import { seed } from "@repo/db/seed";
 import { expect, test, type Page } from "./fixtures";
 
 test.beforeAll(async () => {

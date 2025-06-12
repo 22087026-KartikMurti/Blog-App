@@ -1,4 +1,4 @@
-import { seed } from "../../../../packages/db/src/seed";
+import { seed } from "@repo/db/seed";
 import { expect, test } from "./fixtures";
 
 test.describe("DETAIL SCREEN", () => {
