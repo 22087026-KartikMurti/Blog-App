@@ -24,6 +24,7 @@ if (!fs.existsSync(authDir)) {
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  timeout: 15 * 1000,
   testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: false,
