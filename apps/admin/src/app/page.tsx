@@ -1,6 +1,5 @@
 import { isLoggedIn } from "../utils/auth";
 import { filterPosts } from "../utils/filterPosts";
-import styles from "./page.module.css";
 import Link from "next/link";
 import { getPosts } from "../lib/db/posts";
 
@@ -25,7 +24,7 @@ export default async function Home({
 
   if (!loggedIn) {
     return(
-      <main className={styles.main}>
+      <main>
         <Login />
       </main>
     );

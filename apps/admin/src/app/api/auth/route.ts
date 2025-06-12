@@ -5,8 +5,15 @@ import { env } from "@repo/env/admin";
 
 export async function POST(request: NextRequest) {
     try {
-        const { password } = await request.json();
+        const { username, password } = await request.json();
         
+        // Check if the username is correct
+        if(username !== env.ADMIN) {
+            return NextResponse.json(
+                { message: "Invalid username" },
+                { status: 401 }
+            );
+        }
         // Check if the password is correct
         if (password !== env.PASSWORD) {
             return NextResponse.json(
@@ -30,7 +37,6 @@ export async function POST(request: NextRequest) {
         // Set the token in cookies
         const cookieStore = await cookies();
         cookieStore.set("auth_token", token, {
-            // httpOnly: true: for testing purposes, commented out
             maxAge: 60 * 60, // 1 hour
             path: "/",
             sameSite: "strict"
