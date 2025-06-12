@@ -1,4 +1,4 @@
-import { client } from "./client.js";
+import { client } from "./client.ts";
 import { posts, comments, replies } from "./data.js";
 
 export async function seed() {
