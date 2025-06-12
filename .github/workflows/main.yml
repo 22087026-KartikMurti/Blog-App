@@ -50,11 +50,51 @@ jobs:
           
           # Create .env file in apps/admin
           cat > apps/admin/.env << EOL
-          ADMIN={{ secrets.ADMIN }}
-          PASSWORD={{ secrets.PASSWORD }}
-          JWT_SECRET={{ secrets.JWT_SECRET }}
+          ADMIN=${{ secrets.ADMIN }}
+          PASSWORD=${{ secrets.PASSWORD }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
           EOL
+
+          if [ -f apps/admin/.env ]; then
+            echo "✅ .env file was successfully created in apps/admin"
+            echo "File size: $(wc -c < apps/admin/.env) bytes"
+          else 
+            echo "❌ Failed to create .env file in apps/admin"
+            exit 1
+          fi
           
+      - name: Debug environment variables
+        run: |
+          echo "Debug environment values (for educational purposes):"
+          echo "ADMIN: $ADMIN"
+          echo "PASSWORD: $PASSWORD"
+          echo "JWT_SECRET: $JWT_SECRET"
+          
+          # Check if values match expected
+          if [ "$ADMIN" = "admin" ]; then
+            echo "✅ ADMIN matches expected value"
+          else
+            echo "❌ ADMIN does not match expected value"
+          fi
+          
+          if [ "$PASSWORD" = "123" ]; then
+            echo "✅ PASSWORD matches expected value"
+          else
+            echo "❌ PASSWORD does not match expected value"
+          fi
+          
+          # Check if files exist
+          if [ -f apps/admin/.env ]; then
+            echo "✅ .env file exists"
+            cat apps/admin/.env
+          else
+            echo "❌ .env file does not exist"
+          fi
+        env:
+          ADMIN: ${{ secrets.ADMIN }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+            
       - name: Setup Database
         run: |
           cd packages/db
