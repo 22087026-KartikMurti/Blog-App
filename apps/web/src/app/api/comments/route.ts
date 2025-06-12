@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { client } from "../../../../../../packages/db/src/client";
+import { client } from "@repo/db/client";
 
 // POST handler for creating a new comment
 export async function POST(request: NextRequest) {

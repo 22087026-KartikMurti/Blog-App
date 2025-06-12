@@ -1,11 +1,11 @@
 import { NextResponse, NextRequest } from "next/server";
-import { client } from "../../../../../../../packages/db/src/client";
+import { client } from "@repo/db/client";
 import { headers } from "next/headers";
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { postId: string } }
-) {
+    context: { params: { postId: string } }
+): Promise<NextResponse> {
     try {
       const headersList = await headers();
       const ip = headersList.get('x-forwarded-for') || 
@@ -24,7 +24,7 @@ export async function GET(
         return NextResponse.json({ error: "Invalid request origin" }, { status: 403 });
       }
 
-      const postId = parseInt(params.postId);
+      const postId = parseInt(context.params.postId);
       
       if (isNaN(postId)) {
         return NextResponse.json({ error: "Invalid post ID" }, { status: 400 });
@@ -51,8 +51,8 @@ export async function GET(
   }
 export async function POST(
     request: NextRequest,
-    { params }: { params: { postId: string} }
-  ) {
+    context: { params: { postId: string} }
+  ): Promise<NextResponse> {
     const headersList = await headers();
     const ip = headersList.get('x-forwarded-for') ||
             request.headers.get('x-real-ip') ||
@@ -63,7 +63,7 @@ export async function POST(
     }
     
     try {
-        const postId = parseInt(params.postId);
+        const postId = parseInt(context.params.postId);
         if (isNaN(postId)) {
           return NextResponse.json({ error: "Invalid post ID" }, { status: 400 });
         }
@@ -122,9 +122,9 @@ export async function POST(
 }
 
 export async function DELETE(
-    request: NextRequest,
-  { params }: { params: { postId: string } }
-) {
+  request: NextRequest,
+  context: { params: { postId: string } }
+): Promise<NextResponse> {
   try {
         // Get client IP address for tracking likes
     const headersList = await headers();
@@ -144,7 +144,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Invalid request origin" }, { status: 403 });
     }
 
-    const postId = parseInt(params.postId);
+    const postId = parseInt(context.params.postId);
     
     if (isNaN(postId)) {
       return NextResponse.json({ error: "Invalid post ID" }, { status: 400 });
