@@ -1,12 +1,7 @@
 import { seed } from "../../../../packages/db/src/seed";
 import { expect, test } from "./fixtures";
-import { env } from "../../../../packages/env/admin";
 
 test.beforeAll(async () => {
-  console.log("envs: ");
-  console.log("ADMIN: ", env.ADMIN);
-  console.log("PASSWORD: ", env.PASSWORD);
-  console.log("JWT_SECRETL ", env.JWT_SECRET);
   await seed();
 });
 
