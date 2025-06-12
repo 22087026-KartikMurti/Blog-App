@@ -14,8 +14,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const commentsLength = await client.db.comment.count();
     const newComment = await client.db.comment.create({
       data: {
+        commentId: commentsLength + 1,
         postId: parseInt(postId),
         comment,
       },

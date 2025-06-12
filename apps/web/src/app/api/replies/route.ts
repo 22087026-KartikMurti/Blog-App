@@ -14,8 +14,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const repliesLength = await client.db.reply.count();
     const newReply = await client.db.reply.create({
       data: {
+        replyId: repliesLength + 1,
         commentId: parseInt(commentId),
         reply,
       },
