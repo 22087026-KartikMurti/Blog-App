@@ -70,7 +70,9 @@ jobs:
           sleep 30
           
       - name: Run Tests
-        run: pnpm test-all
+        run: |
+          cd tests/playwright
+          pnpm test-all
         
       - name: Upload test results
         if: always()
