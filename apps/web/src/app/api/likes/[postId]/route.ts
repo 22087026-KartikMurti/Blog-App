@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { client } from "@repo/db/client";
+import { client } from "../../../../../../../packages/db/src/client";
 import { headers } from "next/headers";
 
 export async function GET(

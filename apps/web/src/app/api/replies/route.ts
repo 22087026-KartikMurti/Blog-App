@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { client } from "@repo/db/client";
+import { client } from "../../../../../../packages/db/src/client";
 
 // POST handler for creating a new reply
 export async function POST(request: NextRequest) {

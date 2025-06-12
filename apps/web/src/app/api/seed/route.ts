@@ -1,4 +1,4 @@
-import { seed } from "@repo/db/seed";
+import { seed } from "../../../../../../packages/db/src/seed";
 import { NextResponse } from "next/server";
 
 export async function GET() {
