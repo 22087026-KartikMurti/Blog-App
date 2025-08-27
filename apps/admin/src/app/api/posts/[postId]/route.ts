@@ -107,7 +107,7 @@ export async function PUT(
 
     return NextResponse.json({ success: true, post: updatedPost });
   } catch (error) {
-    console.error("Error updating post active status:", error);
+    console.error("Error updating post:", error);
     return NextResponse.json(
       { message: "Error updating post" },
       { status: 500 }

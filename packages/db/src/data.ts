@@ -1,3 +1,8 @@
+type Like = {
+  postId: number;
+  userIP: string;
+}
+
 export type Post = {
   id: number;
   urlId: string;
@@ -8,9 +13,11 @@ export type Post = {
   date: Date;
   category: string;
   views: number;
+  Likes?: Like[];
   likes: number;
   tags: string;
   active: boolean;
+  comments: number;
 };
 
 export type Comment = {
@@ -65,6 +72,7 @@ export const posts: Post[] = [
     views: 320,
     likes: 3,
     active: true,
+    comments: 2,
   },
   {
     id: 2,
@@ -83,6 +91,7 @@ export const posts: Post[] = [
     views: 10,
     likes: 1,
     active: true,
+    comments: 1,
   },
   {
     id: 3,
@@ -101,6 +110,7 @@ export const posts: Post[] = [
     views: 22,
     likes: 2,
     active: true,
+    comments: 1,
   },
   {
     id: 4,
@@ -118,6 +128,7 @@ export const posts: Post[] = [
     views: 22,
     likes: 1,
     active: false,
+    comments: 0,
   },
   {
     id: 5,
@@ -132,6 +143,7 @@ export const posts: Post[] = [
     views: 0,
     likes: 0,
     active: true,
+    comments: 0,
   },
 ];
 

@@ -17,6 +17,7 @@ export function FilteredItem({ post }: { post: {
     active: boolean;
     likes: number;
     views: number;
+    comments: number;
 }}) {
     const [isActive, setIsActive] = useState(post.active);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -87,7 +88,7 @@ export function FilteredItem({ post }: { post: {
             
                 <div className="flex flex-wrap gap-2 mb-2">
                     <span className="text-sm text-gray-500">
-                    Posted on {new Date(post.date).toLocaleDateString('en-US', {
+                    Posted on {new Date(post.date).toLocaleDateString('en-AU', {
                         day: 'numeric',
                         month: 'short', 
                         year: 'numeric'
@@ -96,6 +97,7 @@ export function FilteredItem({ post }: { post: {
                     <span className="text-sm text-gray-500">• {post.category}</span>
                     <span className="text-sm text-gray-500">• {post.likes} Likes</span>
                     <span className="text-sm text-gray-500">• {post.views} Views</span>
+                    <span className="text-sm text-gray-500">• {post.comments} Comments</span>
                 </div>
             
                 <div className="mb-4">

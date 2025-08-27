@@ -95,6 +95,9 @@ export function FilteredList({
     return (
         <>
             <div className="w-full">
+                {filteredPosts.length == 0 && 
+                    <div>0 Posts Found...</div>
+                }
                 {filteredPosts.length > 0 && currentPosts.map((post) => (
                     <FilteredItem key={post.id} post={post} />
                 ))}

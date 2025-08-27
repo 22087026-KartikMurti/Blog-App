@@ -15,6 +15,38 @@ async function checkAuth() {
     }
 }
 
+export async function GET() {
+    try {
+        const auth = await checkAuth();
+        if (auth !== true) {
+            return auth;
+        } else {
+            console.log("User is authenticated");
+        }
+
+        const dbPosts = await client.db.post.findMany({
+            include: {
+                Likes: true,
+                Comments: true,
+            },
+        });
+
+        const posts = dbPosts.map((post) => ({
+            ...post,
+            likes: post.Likes.length,
+            comments: post.Comments.length,
+        }));
+
+        return NextResponse.json(posts, { status: 200 });
+    } catch(error) {
+        console.error("Error getting post active status:", error);
+        return NextResponse.json(
+            { message: "Error getting post" },
+            { status: 500 }
+        );
+    }
+}
+
 //Creates a new post in the database
 export async function POST(request: NextRequest) {
     try {
@@ -45,7 +77,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ success: true, post: newPost }, { status: 201 });
     } catch (error) {
-        console.error("Error updating post active status:", error);
+        console.error("Error creating post:", error);
         return NextResponse.json(
             { message: "Error creating post" },
             { status: 500 }

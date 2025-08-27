@@ -34,6 +34,7 @@ export default async function Home({
     const posts = dbPosts.map((post) => ({
       ...post,
       likes: post.Likes.length,
+      comments: post.Comments.length,
     }));
      
     const params = await searchParams;
