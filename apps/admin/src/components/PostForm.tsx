@@ -143,9 +143,9 @@ export function PostForm({ initialData }: PostFormProps) {
             const method = initialData?.title ? "PUT" : "POST";
 
             // Convert HTML content from the editor to Markdown for storage
-            const contentMarkdown = turndownService.turndown(formData.content);
-            const sanitizedContent = sanitizeContent(contentMarkdown.trimEnd());
-            if (sanitizedContent.length === 0) {
+            const sanitizedContent = sanitizeContent(formData.content.trimEnd());
+            const contentMarkdown = turndownService.turndown(sanitizedContent);
+            if (contentMarkdown.length === 0) {
                 setFormErrors((prev) => ({
                     ...prev,
                     content: "Content contains invalid HTML",
@@ -156,7 +156,7 @@ export function PostForm({ initialData }: PostFormProps) {
             }
             const updatedFormData = {
                 ...formData,
-                content: sanitizedContent,
+                content: contentMarkdown,
             };
 
             const response = await fetch(endpoint, {

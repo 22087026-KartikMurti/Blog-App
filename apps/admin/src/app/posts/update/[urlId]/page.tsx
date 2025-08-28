@@ -1,7 +1,7 @@
 import { isLoggedIn } from "../../../../utils/auth";
 import { Login } from "../../../../components/Login";
-import { PostForm } from "../../../../components/PostForm";
 import { getPosts } from "../../../../lib/db/posts";
+import { PostFormWrapper } from "../../../../components/PostFormWrapper";
 
 export default async function UpdatePost({ 
     params
@@ -37,7 +37,7 @@ export default async function UpdatePost({
         return (
             <main className="max-w-4xl mx-auto p-4">
                 <h1 className="text-2xl font-bold mb-4">Update Post</h1>
-                <PostForm initialData={initialData} />
+                <PostFormWrapper initialData={initialData} />
             </main>
         );
     }

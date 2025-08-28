@@ -31,7 +31,7 @@ export default async function Page({
   };
 
   return (
-    <div className="max-w-3xl mx-auto w-full">
+    <div className="max-w-3xl mx-auto w-full mb-8 mt-8">
         <article className="flex flex-col p-4 rounded-lg mt-2 shadow-sm hover:shadow-md 
             transition-shadow border border-gray-200 dark:border-gray-700" data-test-id={`blog-post-${updatedPost.id}`}>
           <Link href={`/posts/update/${updatedPost.urlId}`} className="text-3xl font-bold mb-4 block hover:underline">{updatedPost.title}</Link>

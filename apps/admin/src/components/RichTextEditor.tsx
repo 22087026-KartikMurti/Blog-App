@@ -45,6 +45,7 @@ const QuillEditor = forwardRef<any, QuillEditorProps>(
           // Convert markdown to HTML if value is provided
           const htmlValue = await marked(value);
           setEditorValue(htmlValue);
+          console.log("Converted markdown to HTML:", htmlValue);  
         }
       }
 
