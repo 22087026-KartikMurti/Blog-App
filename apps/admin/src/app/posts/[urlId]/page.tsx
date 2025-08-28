@@ -38,7 +38,6 @@ export default async function Page({
     ],
     allowedAttributes: {},
   });
-  console.log("Sanitized content:", content);
 
   return (
     <div className="max-w-3xl mx-auto w-full mb-8 mt-8x">
