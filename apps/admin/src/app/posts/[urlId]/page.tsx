@@ -30,8 +30,18 @@ export default async function Page({
     likes: post.Likes.length,
   };
 
+  const content = sanitizeHtml(marked(updatedPost.content) as string, {
+    allowedTags: [
+        'br', 'strong', 'em', 'p', 'a', 'i',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'ul', 'ol', 'li',
+    ],
+    allowedAttributes: {},
+  });
+  console.log("Sanitized content:", content);
+
   return (
-    <div className="max-w-3xl mx-auto w-full mb-8 mt-8">
+    <div className="max-w-3xl mx-auto w-full mb-8 mt-8x">
         <article className="flex flex-col p-4 rounded-lg mt-2 shadow-sm hover:shadow-md 
             transition-shadow border border-gray-200 dark:border-gray-700" data-test-id={`blog-post-${updatedPost.id}`}>
           <Link href={`/posts/update/${updatedPost.urlId}`} className="text-3xl font-bold mb-4 block hover:underline">{updatedPost.title}</Link>
@@ -54,16 +64,10 @@ export default async function Page({
                   className="rounded-md"
                 />
               </div>
-              <div>
+              <div className="content-area max-w-none">
                 <div data-test-id="content-markdown" dangerouslySetInnerHTML={{
-                  __html: sanitizeHtml(marked(updatedPost.content) as string, {
-                    allowedTags: [
-                      'br', 'strong', 'em', 'p', 'a', 'i',
-                      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-                      'ul', 'ol', 'li',
-                    ],
-                    allowedAttributes: {},
-                })}} />
+                  __html: content
+                }} />
                 {updatedPost.tags && (
                   <div className="flex flex-wrap gap-2 mt-4">
                     {updatedPost.tags.split(',').map((tag, index) => (
