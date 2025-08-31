@@ -69,7 +69,7 @@ export default async function Page({
                 />
               </div>
               <div>
-                <div data-test-id="content-markdown" dangerouslySetInnerHTML={{
+                <div className="content-area" data-test-id="content-markdown" dangerouslySetInnerHTML={{
                   __html: sanitizeHtml(marked(updatedPost.content) as string, {
                     allowedTags: [
                       'br', 'strong', 'em', 'p', 'a', 'i',
